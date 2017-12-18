@@ -14,7 +14,7 @@ JWTLogin = {};
   JWTLogin.tokenOptions = ( Meteor.settings.JWTLogin && 
                             Meteor.settings.JWTLogin.tokenOptions );
   JWTLogin.tokenOptions = JWTLogin.tokenOptions || {
-    expiresInMinutes: 48 * 60
+    expiresIn: 48 * 60
   };
 
   // Options for verifyToken
@@ -26,12 +26,14 @@ JWTLogin = {};
 
   // Get token to verify e-mail address
   JWTLogin.getToken = function(email) {
+    check(email, String);
     check(this.secret, String);
     return jwt.sign({ email: email }, this.secret, this.tokenOptions);
   };
 
   // Verify a token
   JWTLogin.verifyToken = function(token) {
+    check(token, String);
     check(this.secret, String);
     return jwt.verify(token, this.secret, this.verifyOptions);
   };
