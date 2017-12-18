@@ -1,8 +1,8 @@
 Package.describe({
-  name: 'fongandrew:jwt-login',
-  version: '0.1.2',
-  summary: 'Log into Meteor\'s user account system with a JSON web token',
-  git: 'https://github.com/fongandrew/meteor-jwt-login.git'
+  name: 'hackprinceton:accounts-jwt',
+  version: '0.1.0',
+  summary: 'A JSON web tokens-based login approach, implementing email and SMS magic liinks.',
+  git: 'https://github.com/hackprinceton/meteor-accounts-jwt',
 });
 
 Npm.depends({jsonwebtoken: "8.1.0"});
@@ -20,10 +20,8 @@ Package.onUse(function(api) {
 });
 
 Package.onTest(function(api) {
-  'use strict';
-  
   api.use('tinytest');
-  api.use('fongandrew:jwt-login');
+  api.use('hackprinceton:accounts-jwt');
   api.use('random');
   api.use('accounts-password');
   api.addFiles('jwt_login_tests.js', ['client', 'server']);
