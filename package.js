@@ -5,9 +5,9 @@ Package.describe({
   git: 'https://github.com/hackprinceton/meteor-accounts-jwt',
 });
 
-Npm.depends({jsonwebtoken: "8.1.0"});
+Npm.depends({ jsonwebtoken: '8.1.0' });
 
-Package.onUse(function(api) {
+Package.onUse((api) => {
   api.versionsFrom('METEOR@1.5.2.2');
   api.use('accounts-base');
   api.use('underscore');
@@ -19,7 +19,7 @@ Package.onUse(function(api) {
   api.export('JWTLogin', ['server', 'client']);
 });
 
-Package.onTest(function(api) {
+Package.onTest((api) => {
   api.use('tinytest');
   api.use('hackprinceton:accounts-jwt');
   api.use('random');
