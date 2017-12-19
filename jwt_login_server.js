@@ -1,7 +1,6 @@
-/* global JWTLogin: true */
-JWTLogin = {};
+import jwt from 'jsonwebtoken';
 
-const jwt = Npm.require('jsonwebtoken');
+export const JWTLogin = {};
 
 // Can override this later to change secret
 JWTLogin.secret = (Meteor.settings.JWTLogin &&

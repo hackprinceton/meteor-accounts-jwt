@@ -1,3 +1,5 @@
+import { JWTLogin } from 'meteor/hackprinceton:accounts-jwt';
+
 // Auto-set something for our secret
 if (Meteor.isServer) {
   JWTLogin.secret = Random.secret();

@@ -8,18 +8,19 @@ Package.describe({
 Npm.depends({ jsonwebtoken: '8.1.0' });
 
 Package.onUse((api) => {
-  api.versionsFrom('METEOR@1.5.2.2');
+  api.versionsFrom('1.5.2');
+  api.use('ecmascript');
   api.use('accounts-base');
   api.use('underscore');
   api.use('random');
   api.use('check');
 
-  api.addFiles('jwt_login_client.js', ['client']);
-  api.addFiles('jwt_login_server.js', ['server']);
-  api.export('JWTLogin', ['server', 'client']);
+  api.mainModule('jwt_login_server.js', 'server');
+  api.mainModule('jwt_login_client.js', 'client');
 });
 
 Package.onTest((api) => {
+  api.use('ecmascript');
   api.use('tinytest');
   api.use('hackprinceton:accounts-jwt');
   api.use('random');
