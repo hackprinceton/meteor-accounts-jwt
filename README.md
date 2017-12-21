@@ -26,7 +26,8 @@ should correspond to the options provided to `jwt.verify`.
 Usage
 =====
 Call `JWTLogin.getToken(email)` to get a token for a given email address. You
-can use this token to construct a special login link or whatever else you want.
+can use this token to construct a special login link for emailing or whatever
+else you want.
 
 On the client, call `Accounts.loginWithJWT(token, callback)` to automatically
 log a user in with a given token. The callback receives an error on failure

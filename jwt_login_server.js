@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
 import { Match, check } from 'meteor/check';
 
@@ -14,7 +15,7 @@ let tokenOptions;
 let verifyOptions;
 
 /**
- * Initialize the login mechanism. 
+ * Initialize the login mechanism.
  * @param {Object} options A key with options `secret`, `tokenOptions`, and `verifyOptions`.
  *                         `secret` is mndatory and refers to the signing secret used.
  *                         `tokenOptions` are options used during signing. `verifyOptions` are
@@ -27,24 +28,36 @@ JWTLogin.init = (options) => {
     verifyOptions: Match.Maybe({}),
   });
 
+  if (!secret && Meteor.isDevelopment) {
+    console.warn('accounts-jwt initialized again after already being initialized.');
+    console.warn('This may lead to previously produced JWTs becoming invalid.');
+  }
+
   secret = options.secret; // eslint-disable-line prefer-destructuring
   tokenOptions = _.defaults(options.tokenOptions || {}, {
-    expiresIn: 48 * 60,
+    expiresIn: '20m',
   });
   verifyOptions = _.defaults(options.verifyOptions || {}, {
     ignoreExpiration: false,
   });
 };
 
-// Get token to verify e-mail address
-JWTLogin.getToken = function (email) {
+/**
+ * Generates a login token to be sent to the email address and verified.
+ * @param {string} email the email address to be verified
+ */
+JWTLogin.getToken = (email) => {
   check(email, String);
   check(secret, String);
   return jwt.sign({ email }, secret, tokenOptions);
 };
 
-// Verify a token
-JWTLogin.verifyToken = function (token) {
+/**
+ * Verifies a JWT. This function respects JWT expiry by default unless otherwise
+ * specified in `verifyOptions` on initialization.
+ * @param {string} token the token to be verified
+ */
+JWTLogin.verifyToken = (token) => {
   check(token, String);
   check(secret, String);
   return jwt.verify(token, secret, verifyOptions);
@@ -59,6 +72,7 @@ Accounts.registerLoginHandler('jwt_login', (options) => {
   // Payload should be of form {email: email}
   let email;
   try {
+    // eslint-disable-next-line prefer-destructuring
     email = JWTLogin.verifyToken(options.jwt).email;
   } catch (err) {
     if (err.name === 'JsonWebTokenError') {
@@ -112,9 +126,10 @@ Accounts.insertUserDoc = function (options, user) {
   if (_.isString(options.jwt)) {
     let email;
     try {
+      // eslint-disable-next-line prefer-destructuring
       email = JWTLogin.verifyToken(options.jwt).email;
     } catch (err) {
-      // Invalid token -> ignore
+      // invalid token -> ignore
     }
     if (email) {
       // Replace emails var with verified address
