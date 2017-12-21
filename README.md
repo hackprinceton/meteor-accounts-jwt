@@ -1,14 +1,12 @@
-# meteor-jwt-login
+# meteor-accounts-jwt
 This enables logging in to Meteor's user account system with a JSON web token.
 The JWT payload is tied to an e-mail address, which allows you to send a login
 link that verifies a user's email address before the actual user document is 
 created.
 
-__THIS PACKAGE IS NOT ACTIVELY MAINTAINED. USE AT YOUR OWN RISK.__
-
 Installation
 ============
-`meteor add fongandrew:jwt-login`
+`meteor add hackprinceton:accounts-jwt`
 
 Settings
 ========
@@ -47,3 +45,8 @@ Accounts.createUser({ email: email, password: password, jwt: token },
 
 If the email provided to `createUser` does not match the e-mail encoded by
 the token, the e-mail provided by the token overrides the given e-mail.
+
+Testing
+=======
+
+Test with `meteor test-packages ./ --settings test_settings.json`.

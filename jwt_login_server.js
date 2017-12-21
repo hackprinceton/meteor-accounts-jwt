@@ -1,37 +1,53 @@
 import jwt from 'jsonwebtoken';
+import { _ } from 'meteor/underscore';
+import { Match, check } from 'meteor/check';
 
 export const JWTLogin = {};
 
-// Can override this later to change secret
-JWTLogin.secret = (Meteor.settings.JWTLogin &&
-                    Meteor.settings.JWTLogin.secret);
+/** The secret used for HMAC signing. */
+let secret;
 
-// Options for getToken
-JWTLogin.tokenOptions = (Meteor.settings.JWTLogin &&
-                          Meteor.settings.JWTLogin.tokenOptions);
-JWTLogin.tokenOptions = JWTLogin.tokenOptions || {
-  expiresIn: 48 * 60,
-};
+/** The options used during signing. */
+let tokenOptions;
 
-// Options for verifyToken
-JWTLogin.verifyOptions = (Meteor.settings.JWTLogin &&
-                            Meteor.settings.JWTLogin.verifyOptions);
-JWTLogin.verifyOptions = JWTLogin.verifyOptions || {
-  ignoreExpiration: false,
+/** The options ued for verification. */
+let verifyOptions;
+
+/**
+ * Initialize the login mechanism. 
+ * @param {Object} options A key with options `secret`, `tokenOptions`, and `verifyOptions`.
+ *                         `secret` is mndatory and refers to the signing secret used.
+ *                         `tokenOptions` are options used during signing. `verifyOptions` are
+ *                         the options used during verification.
+ */
+JWTLogin.init = (options) => {
+  check(options, {
+    secret: String,
+    tokenOptions: Match.Maybe({}),
+    verifyOptions: Match.Maybe({}),
+  });
+
+  secret = options.secret; // eslint-disable-line prefer-destructuring
+  tokenOptions = _.defaults(options.tokenOptions || {}, {
+    expiresIn: 48 * 60,
+  });
+  verifyOptions = _.defaults(options.verifyOptions || {}, {
+    ignoreExpiration: false,
+  });
 };
 
 // Get token to verify e-mail address
 JWTLogin.getToken = function (email) {
   check(email, String);
-  check(this.secret, String);
-  return jwt.sign({ email }, this.secret, this.tokenOptions);
+  check(secret, String);
+  return jwt.sign({ email }, secret, tokenOptions);
 };
 
 // Verify a token
 JWTLogin.verifyToken = function (token) {
   check(token, String);
-  check(this.secret, String);
-  return jwt.verify(token, this.secret, this.verifyOptions);
+  check(secret, String);
+  return jwt.verify(token, secret, verifyOptions);
 };
 
 // Register a login handler

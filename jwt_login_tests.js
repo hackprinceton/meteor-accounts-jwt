@@ -1,8 +1,12 @@
+import { Meteor } from 'meteor/meteor';
+import { Random } from 'meteor/random';
 import { JWTLogin } from 'meteor/hackprinceton:accounts-jwt';
 
 // Auto-set something for our secret
 if (Meteor.isServer) {
-  JWTLogin.secret = Random.secret();
+  JWTLogin.init({
+    secret: Random.secret(),
+  });
 }
 
 // Meteor methods for testing server code
