@@ -64,8 +64,9 @@ JWTLogin.verifyToken = (token) => {
 };
 
 // Register a login handler
-Accounts.registerLoginHandler('jwt_login', (options) => {
-  if (!_.isString(options.jwt)) {
+Accounts.registerLoginHandler('jwt', (options) => {
+  const token = options.jwt;
+  if (!_.isString(token)) {
     return undefined; // Don't handle
   }
 
@@ -73,7 +74,7 @@ Accounts.registerLoginHandler('jwt_login', (options) => {
   let email;
   try {
     // eslint-disable-next-line prefer-destructuring
-    email = JWTLogin.verifyToken(options.jwt).email;
+    email = JWTLogin.verifyToken(token).email;
   } catch (err) {
     if (err.name === 'JsonWebTokenError') {
       return { error: new Meteor.Error(400, 'invalid-token') };
@@ -81,7 +82,7 @@ Accounts.registerLoginHandler('jwt_login', (options) => {
       return { error: new Meteor.Error(400, 'expired-token') };
     }
 
-    throw err; // Unknown error
+    throw err;
   }
 
   if (!_.isString(email)) {
@@ -122,7 +123,8 @@ Accounts.registerLoginHandler('jwt_login', (options) => {
 // Override insertUserDoc to mark e-mails as verified on creation when
 // the 'jwt' option is set
 const oldInsertUserDoc = Accounts.insertUserDoc;
-Accounts.insertUserDoc = function (options, user) {
+Accounts.insertUserDoc = function (...args) {
+  const [options, user] = args;
   if (_.isString(options.jwt)) {
     let email;
     try {
@@ -139,5 +141,5 @@ Accounts.insertUserDoc = function (options, user) {
       }];
     }
   }
-  return oldInsertUserDoc.apply(Accounts, arguments);
+  return oldInsertUserDoc.apply(Accounts, args);
 };

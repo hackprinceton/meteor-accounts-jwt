@@ -38,7 +38,7 @@ if (Meteor.isClient) {
       Meteor.call('jwtlogin/getTokenForNewUser', (err, res) => {
         if (err) { throw err; }
         if (res) {
-          Accounts.loginWithJWT(res.token, (err) => {
+          Meteor.loginWithJWT({ token: res.token }, (err) => {
             if (err) { throw err; }
 
             // No error -> make sure we're logged in
@@ -62,7 +62,7 @@ if (Meteor.isClient) {
       Meteor.call('jwtlogin/getToken', email, (err, res) => {
         if (err) { throw err; }
         if (res) {
-          Accounts.loginWithJWT(res.token, (err) => {
+          Meteor.loginWithJWT({ token: res.token }, (err) => {
             test.isTrue(err);
             test.equal(err.error, 404);
             test.equal(err.reason, 'user-not-found');
