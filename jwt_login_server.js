@@ -35,10 +35,12 @@ JWTLogin.init = (options) => {
 
   secret = options.secret; // eslint-disable-line prefer-destructuring
   tokenOptions = _.defaults(options.tokenOptions || {}, {
+    algorithm: 'HS512',
     expiresIn: '20m',
   });
   verifyOptions = _.defaults(options.verifyOptions || {}, {
     ignoreExpiration: false,
+    algorithms: ['HS512'],
   });
 };
 
@@ -115,9 +117,7 @@ Accounts.registerLoginHandler('jwt', (options) => {
   }
 
   // Else no user. Throw error so client knows to init user creation
-  return {
-    error: new Meteor.Error(404, 'user-not-found'),
-  };
+  return { error: new Meteor.Error(404, 'user-not-found') };
 });
 
 // Override insertUserDoc to mark e-mails as verified on creation when
