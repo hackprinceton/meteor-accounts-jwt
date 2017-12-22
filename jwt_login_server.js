@@ -28,8 +28,8 @@ JWTLogin.init = (options) => {
     verifyOptions: Match.Maybe({}),
   });
 
-  if (!secret && Meteor.isDevelopment) {
-    console.warn('accounts-jwt initialized again after already being initialized.');
+  if (Meteor.isDevelopment && secret && secret !== options.secret) {
+    console.warn('accounts-jwt initialized again with new secret after already being initialized.');
     console.warn('This may lead to previously produced JWTs becoming invalid.');
   }
 
