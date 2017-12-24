@@ -1,6 +1,6 @@
 Package.describe({
   name: 'hackprinceton:accounts-jwt',
-  version: '0.1.0',
+  version: '0.1.1',
   summary: 'A JSON web tokens-based login approach, implementing email and SMS magic liinks.',
   git: 'https://github.com/hackprinceton/meteor-accounts-jwt',
 });
