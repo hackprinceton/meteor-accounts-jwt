@@ -24,8 +24,8 @@ let verifyOptions;
 JWTLogin.init = (options) => {
   check(options, {
     secret: String,
-    tokenOptions: Match.Maybe({}),
-    verifyOptions: Match.Maybe({}),
+    tokenOptions: Match.Maybe(Object),
+    verifyOptions: Match.Maybe(Object),
   });
 
   if (Meteor.isDevelopment && secret && secret !== options.secret) {
