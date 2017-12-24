@@ -11,26 +11,26 @@ created.
 
 ## Settings
 
-This package will check your `settings.json` for config options.
+## Usage
 
-```json
-"JWTLogin": {
+```javascript
+import { JWTLogin } from 'meteor/hackprinceton:accounts-jwt';
+```
+
+Initialize this package by calling `JWTLogin.init()` on application startup.
+
+```js
+JWTLogin.init({
   "secret": "some-secret-string",
-  "tokenOptions": { ... },  // See below
-  "verifyOptions": { ... }  // See below
-}
+  "tokenOptions": { ... },  // see below
+  "verifyOptions": { ... }  // see below
+});
 ```
 
 This package uses [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken)
 for the actual JWT encoding / decoding. The `tokenOptions` in `settings.json`
 should correspond to the options provided to `jwt.sign` while the
 `verifyOptions` should correspond to the options provided to `jwt.verify`.
-
-## Usage
-
-```javascript
-import { JWTLogin } from 'meteor/hackprinceton:accounts-jwt';
-```
 
 Call `JWTLogin.getToken(email)` to get a token for a given email address. You
 can use this token to construct a special login link for emailing or whatever
@@ -46,10 +46,13 @@ When creating a new user, you can pass the token like so to create a user
 with an automatically verified e-mail address:
 
 ```javascript
-Accounts.createUser({ email: email, password: password, jwt: token }, 
-  function(err) {
-    // Do something ...
-  })
+Accounts.createUser({ 
+  email: email, 
+  password: password, 
+  jwt: token 
+}, function(err) {
+  // do something ...
+});
 ```
 
 If the email provided to `createUser` does not match the e-mail encoded by
